@@ -1,74 +1,15 @@
-apply plugin: 'com.github.ben-manes.versions'
-apply plugin: 'com.vanniktech.code.quality.tools'
-apply plugin: 'com.vanniktech.android.junit.jacoco'
-
 buildscript {
-  ext.kotlinVersion = '1.2.41'
-  ext.versions = [
-    espresso: '3.0.1',
-    testRules: '1.0.1',
-  ]
-
-  ext.deps = [
-    'support': [
-      'test': [
-        'espresso': [
-          'core': "com.android.support.test.espresso:espresso-core:${versions.espresso}",
-        ],
-        'runner': "com.android.support.test:runner:${versions.testRules}",
-        'rules': "com.android.support.test:rules:${versions.testRules}",
-      ],
-    ],
-    'fastLaneScreenGrab': "tools.fastlane:screengrab:1.1.0",
-  ]
+  ext.kotlin_version = '1.2.61'
 
   repositories {
     mavenCentral()
     google()
-    gradlePluginPortal()
   }
+
   dependencies {
-    classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.10.0'
-    classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.11.0'
-    classpath 'com.vanniktech:gradle-maven-publish-plugin:0.4.0'
 
-    classpath 'com.android.tools.build:gradle:3.0.1'
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-  }
-}
-
-codeQualityTools {
-  lint {
-    textReport = true
-  }
-  checkstyle {
-    toolVersion = '8.7'
-  }
-  pmd {
-    toolVersion = '6.0.1'
-  }
-  ktlint {
-    toolVersion = '0.24.0'
-  }
-  detekt {
-    toolVersion = '1.0.0.RC7'
-  }
-  errorProne {
-    toolVersion = '2.1.2'
-  }
-}
-
-junitJacoco {
-  // Don't care about sample and generated modules
-  ignoreProjects = ['app', 'emoji-ios', 'emoji-google', 'emoji-twitter', 'emoji-one', 'emoji-compat', 'emoji-kotlin']
-}
-
-subprojects {
-  repositories {
-    google()
-    jcenter()
-    mavenCentral()
+    classpath 'com.android.tools.build:gradle:3.1.4'
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
 }
 
@@ -77,8 +18,7 @@ ext {
   compileSdkVersion = 27
   targetSdkVersion = 27
 
-  supportLibraryVersion = '27.0.2'
-  leakCanaryVersion = '1.5.1'
+  supportLibraryVersion = '27.1.1'
 
   versionCode = VERSION_CODE
   versionName = VERSION_NAME
@@ -92,24 +32,16 @@ ext {
   supportEmoji = "com.android.support:support-emoji:$supportLibraryVersion"
   supportEmojiBundled = "com.android.support:support-emoji-bundled:$supportLibraryVersion"
 
-  leakCanaryDebug = "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
-  leakCanaryRelease = "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+  javaVersion = JavaVersion.VERSION_1_8
+}
+allprojects {
 
-  testing = [
-          junit             : 'junit:junit:4.12',
-          robolectric       : 'org.robolectric:robolectric:3.5.1',
-          privateConstructor: 'com.pushtorefresh.java-private-constructor-checker:checker:1.2.0',
-          assertJ           : 'org.assertj:assertj-core:3.8.0'
-  ]
-
-  javaVersion = JavaVersion.VERSION_1_7
+  repositories {
+    jcenter()
+    google()
+  }
 }
 
-task wrapper(type: Wrapper) {
-  gradleVersion = '4.8'
-  distributionType = Wrapper.DistributionType.ALL
-}
-
-subprojects {
-  task allDependencies(type: DependencyReportTask) {}
+task clean(type: Delete) {
+  delete rootProject.buildDir
 }

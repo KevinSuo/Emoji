@@ -75,7 +75,7 @@ import java.util.concurrent.TimeUnit;
     onPageSelected(startIndex);
   }
 
-  private void handleOnClicks(final ViewPager emojisPager) {
+  @SuppressLint("ClickableViewAccessibility") private void handleOnClicks(final ViewPager emojisPager) {
     for (int i = 0; i < emojiTabs.length - 1; i++) {
       emojiTabs[i].setOnClickListener(new EmojiTabsClickListener(emojisPager, i));
     }
